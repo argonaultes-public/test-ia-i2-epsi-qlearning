@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+import random
+
 def click_btn_register(driver: webdriver.Firefox):
     button = driver.find_element(by = By.ID, value = 'register')
     button.click()
@@ -33,7 +35,7 @@ print(Q)
 alpha = 0.1 # taux d'apprentissage
 gamma = 0.9 # rapprocher gamma de 1 si nous avons beaucoup d'états, sinon, le rapprocher de 0
 epsilon = 0.2 # exploration probability entre 0 et 1
-num_episodes = 1
+num_episodes = 10
 
 # Créer une fonction dont l'objectif est de choisir une action en suivant la stratégie epsilon-greedy
 # choisir une valeur aléatoire comprise entre 0 et 1
@@ -42,12 +44,19 @@ num_episodes = 1
 # cette fonction renvoie donc une action
 def choose_action(state):
     # récupérer nb aléatoire entre 0 et 1
+    next_random = random.random()
+    next_action = None
     # si nb est < epsilon
-    ## parmi la liste actions, prendre n'importe laquelle
-
+    if next_random < epsilon:
+        ## parmi la liste actions, prendre n'importe laquelle
+        next_action = random.choice(actions)
     # si nb est >= epsilon
-    ## récupérer l'action qui a le plus Q-Table pour l'état donné
-    pass
+    else:
+    ## récupérer l'action qui a le plus grand score dans Q-Table pour l'état donné
+        next_action = max(Q[state], key=Q[state].get)
+    print(f'next_random: {next_random}, is_curious: {next_random < epsilon}, next_action: {next_action}, state: {state}')
+    print('Q[state]', Q[state])
+    return next_action
 
 # créer une fonction qui va renvoyer l'état attendu pour une action donné
 # créer un comportement par défaut qui choisit un état au hasard si l'action ne correspond à aucune prévue
@@ -62,17 +71,24 @@ def update_Q(state, action, reward, next_state):
     # TODO
     pass
 
+def get_state(driver):
+    return driver.current_url
+
 # Pour terminer, entrainer notre Q-Table sur un nombre fixe d'épisodes
 for _ in range(num_episodes) :
     driver = webdriver.Firefox()
     # Initialiser la navigation à un état aléatoire
+    driver.get('http://localhost:5000')
 
+    current_state = get_state(driver).removeprefix('http://localhost:5000')
+    print(f'current_state: {current_state}')
+    next_action = choose_action(current_state)
+    next_action(driver)
     # Réaliser autant d'itérations tant que l'état cible n'est pas atteint
     # A chaque itération
     ## choisir une action avec la fonction choose_action
-    driver.get('http://localhost:5000')
+    
 
-    actions[0](driver)
     ## obtenir la prochaine étape et la récompense de l'état en cours avec la fonction step
     # mettre à jour la Q-Table avec toutes ces valeurs récupérées
     driver.quit()
