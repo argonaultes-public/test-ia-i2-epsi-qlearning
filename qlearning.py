@@ -15,12 +15,17 @@ states = [ '/subscribe', '/check', '/welcome']
 # Définir une liste d'actions possibles, dans notre cas, cliquer sur un bouton donné, ou cliquer sur un lien
 actions = [ click_btn_register, click_first_href ]
 # Pour chaque état obtenu, affecter une récompense. Si on cherche à atteindre une page en particulier, donner un nombre de points positifs (10), et pour les autres adresses, des points négatifs (-1 à -5)
-rewards = []
+rewards = {'/subscribe': 2, '/check': 10, '/welcome': -5}
 
 # Initialiser le dictionner avec uniquement des zéros
 # Dans ce dictionnaire de dictionnaire, pour chaque état, pour chaque action, un score est associé, ici tous les scores sont à zéro.
+# Q-Table
 Q = {}
+for state in states:
+    Q[state] = {action: 0 for action in actions}
 # Q[state] = {'action1': 0, 'action2': 0, 'action3': 0}
+
+print(Q)
 
 # Q[state][action] # return the score
 
@@ -36,7 +41,12 @@ num_episodes = 1
 # si >= epsilon, se lancer dans l'exploitation, c'est à dire choisir l'action avec le grand score dans la Q-Table pour l'état en cours
 # cette fonction renvoie donc une action
 def choose_action(state):
-    # TODO
+    # récupérer nb aléatoire entre 0 et 1
+    # si nb est < epsilon
+    ## parmi la liste actions, prendre n'importe laquelle
+
+    # si nb est >= epsilon
+    ## récupérer l'action qui a le plus Q-Table pour l'état donné
     pass
 
 # créer une fonction qui va renvoyer l'état attendu pour une action donné
