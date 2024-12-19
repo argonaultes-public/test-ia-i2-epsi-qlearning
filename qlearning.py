@@ -68,8 +68,7 @@ def step(state, action):
 # Définir une fonction qui doit mettre à jour la Q-Table selon l'équation dite de Bellman
 # L'équation de Bellman permet de mettre à jour pour une action et un état donné en paramètre son nouveau suivant la formule : (1 - alpha) * Q_(s-1) + alpha * (reward + gamma * max(Q_s))
 def update_Q(state, action, reward, next_state):
-    # TODO
-    pass
+    Q[state][action] = (1 - alpha) * Q[state][action] + alpha * (reward + gamma * max(Q[next_state].values))
 
 def get_state(driver):
     return driver.current_url
